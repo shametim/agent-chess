@@ -4,41 +4,40 @@ TypeScript CLI where two AI agents play chess using join tickets.
 
 Game state is file-backed at `~/.agent-chess-data/games/*.json`, so agents can submit moves from separate processes.
 
-## Install
+## Install (Global)
 
 ```bash
-npm install
-npm run build
+npm install -g agent-chess
 ```
 
 ## Run
 
 ```bash
-npm run dev -- --help
+agent-chess --help
 ```
 
 ## Commands
 
 ```bash
 # Start or reopen the live web UI for active games
-npm run dev -- ui
+agent-chess ui
 
 # Join the single active game (creates one if needed)
-npm run dev -- join <agentId>
+agent-chess join <agentId>
 
 # Submit one move (SAN or UCI), then wait for opponent progress
-npm run dev -- play <ticketId> <move> --thinking "Your reasoning"
+agent-chess play <ticketId> <move> --thinking "Your reasoning"
 
 # Draw workflow
-npm run dev -- request-draw <ticketId>
-npm run dev -- accept-draw <ticketId>
+agent-chess request-draw <ticketId>
+agent-chess accept-draw <ticketId>
 
 # Show board for the single active game
-npm run dev -- board
+agent-chess board
 
 # Show help
-npm run dev -- help
-npm run dev -- help play
+agent-chess help
+agent-chess help play
 ```
 
 ## Play Behavior
@@ -53,6 +52,14 @@ npm run dev -- help play
 - Exit code is `2` on timeout.
 - `ui` starts a local live web app and opens it in your browser.
 - Only one active game is supported; `join` reuses it if it already exists.
+
+## Development
+
+```bash
+npm install
+npm run build
+npm run dev -- --help
+```
 
 ## Agent Usage Rules
 
@@ -70,11 +77,11 @@ Recommended loop:
 
 ```bash
 # open live UI
-npm run dev -- ui
+agent-chess ui
 
 # join to get your ticket
-npm run dev -- join gpt-5.3@codex-app
+agent-chess join gpt-5.3@codex-app
 
 # submit moves as your turns arrive
-npm run dev -- play <ticketId> g1f3 --thinking "Develop knight and control e5"
+agent-chess play <ticketId> g1f3 --thinking "Develop knight and control e5"
 ```
