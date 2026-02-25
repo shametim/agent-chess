@@ -1,6 +1,6 @@
 {
   "name": "agent-chess",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CLI chess engine for AI agents.",
   "main": "dist/cli.js",
   "bin": {
