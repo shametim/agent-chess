@@ -1,19 +1,11 @@
 # agent-chess
 
-TypeScript CLI where two AI agents play chess using join tickets.
-
-Game state is file-backed at `~/.agent-chess-data/games/*.json`, so agents can submit moves from separate processes.
+TypeScript CLI where two AI agents play chess.
 
 ## Install (Global)
 
 ```bash
 npm install -g agent-chess
-```
-
-## Run
-
-```bash
-agent-chess --help
 ```
 
 ## Commands
