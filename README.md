@@ -1,8 +1,8 @@
 # agent-chess
 
-TypeScript CLI where two AI agents can play chess using join tickets.
+TypeScript CLI where two AI agents play chess using join tickets.
 
-Game state is file-backed (`~/.agent-chess-data/games/*.json`), so agents can submit moves from separate processes.
+Game state is file-backed at `~/.agent-chess-data/games/*.json`, so agents can submit moves from separate processes.
 
 ## Install
 
@@ -17,73 +17,64 @@ npm run build
 npm run dev -- --help
 ```
 
-## Core commands
+## Commands
 
 ```bash
-# Join game (creates one if none active), get side + ticket
+# Start or reopen the live web UI for active games
+npm run dev -- ui
+
+# Join the single active game (creates one if needed)
 npm run dev -- join <agentId>
 
-# Submit one move with your ticket, then wait for opponent move
-npm run dev -- play <ticketId> <move>
+# Submit one move (SAN or UCI), then wait for opponent progress
+npm run dev -- play <ticketId> <move> --thinking "Your reasoning"
 
-# Include thinking metadata
-npm run dev -- play <ticketId> e2e4 --thinking "Claim center. Open lines and keep king safety options"
+# Draw workflow
+npm run dev -- request-draw <ticketId>
+npm run dev -- accept-draw <ticketId>
 
-# Inspect state
+# Show board for the single active game
 npm run dev -- board
-npm run dev -- history <gameId>
-npm run dev -- list
 
-# Live web monitor
-npm run dev -- live <gameId> --poll-ms 1500
-
+# Show help
+npm run dev -- help
+npm run dev -- help play
 ```
 
-## Play behavior
+## Play Behavior
 
-- `play` submits exactly one move and then blocks while waiting for opponent progress.
-- If it is not your turn yet, `play` blocks until your turn is available (or timeout).
+- `join` blocks until both agents have joined and it is your turn.
+- `join` returns a ticket tied to your game and side.
+- `play` requires `--thinking` on every move.
+- `play` submits exactly one move and then blocks waiting for opponent progress.
+- If it is not your turn, `play` waits until your turn is available before submitting.
+- If there is a pending draw request from the opponent, the first `play` call prints a draw prompt and exits; running `play` again continues play (implicit decline).
 - Timeout is fixed at 2 minutes.
 - Exit code is `2` on timeout.
-- On exit, `play` prints board state, game stats, and writes a step-by-step replay HTML file.
-- On exit, `play` also prints a stable per-game live URL.
-- `board` also writes/refreshes a replay HTML file for the selected game.
-- `board` also prints/starts the same per-game live URL.
-- The managed live URL process is detached and not auto-stopped when a game becomes inactive.
-- `join` returns a ticket tied to your model id, game id, and side.
-- Only one active game is allowed at a time; `join` reuses it instead of creating another.
-- `join` blocks until both agents have joined and it is your turn.
-- `play` uses ticket id only.
+- `ui` starts a local live web app and opens it in your browser.
+- Only one active game is supported; `join` reuses it if it already exists.
 
-## JSON mode
+## Agent Usage Rules
 
-Most commands support `--json` for machine-readable integration.
+Use only this CLI while playing.
 
-```bash
-npm run dev -- play <ticketId> e2e4 --thinking "Claim center" --json
-npm run dev -- history <gameId> --json
-npm run dev -- list --json
-```
-
-## Agent usage rules
-
-Use only this CLI while playing, and do not run background terminals/processes for gameplay.
-Use direct CLI commands only; do not write scripts/wrappers/macros/aliases to automate gameplay.
-Use your model identity as `agentId` in `join` (examples: `gpt-5.3`, `gemini-2.5-pro`).
-Keep your `ticketId` from `join`; use it for every `play` command.
-Always include `--thinking "<reasoning>"` in each `play` command so live UI can display your rationale.
-Run one `play` move at a time and let it block; do not start a second session to play the opponent color yourself.
-Agents are expected to choose and submit moves autonomously; do not ask the human for move decisions or gameplay input.
+- Use direct CLI commands only; do not write scripts, wrappers, macros, or aliases to automate gameplay.
+- Do not run background terminals/processes for gameplay.
+- Use your model identity + harness/environment for `agentId` in `join` (examples: `gpt-5.3@codex-app`, `gemini-2.5-pro@opencode-cli`).
+- Keep your `ticketId` from `join`; use it for every `play`, `request-draw`, and `accept-draw` command.
+- Always include `--thinking "<reasoning>"` in each `play` command so rationale is visible in live UI.
+- Run one `play` move at a time and let it block; do not play the opponent color yourself.
+- Agents must choose and submit moves autonomously; do not ask the human for move decisions.
 
 Recommended loop:
 
 ```bash
-# open the live UI
+# open live UI
 npm run dev -- ui
 
 # join to get your ticket
 npm run dev -- join gpt-5.3@codex-app
 
-# after opponent responds, submit your next move
-npm run dev -- play <ticketId> g1f3 --thinking "Develop knight"
+# submit moves as your turns arrive
+npm run dev -- play <ticketId> g1f3 --thinking "Develop knight and control e5"
 ```
