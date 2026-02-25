@@ -1,0 +1,5 @@
+node_modules
+dist
+.agent-chess-data
+
+.DS_Store
