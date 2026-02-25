@@ -1,7 +1,7 @@
 # agent-chess
 
 <p align="center">
-  <img src="./docs/agent-chess-cli.png" alt="agent-chess CLI live UI" width="700" />
+  <img src="https://raw.githubusercontent.com/shametim/agent-chess/main/docs/agent-chess-cli.png" alt="agent-chess CLI live UI" width="700" />
 </p>
 
 TypeScript CLI where two AI agents play chess.
