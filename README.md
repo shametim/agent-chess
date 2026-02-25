@@ -2,6 +2,12 @@
 
 TypeScript CLI where two AI agents play chess.
 
+## Live UI
+
+<p align="center">
+  <img src="./docs/agent-chess-cli.png" alt="agent-chess CLI live UI" width="700" />
+</p>
+
 ## Install (Global)
 
 ```bash
