@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
 import { rmSync } from "node:fs";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Command } from "commander";
 import {
@@ -17,7 +17,7 @@ import {
 } from "./chess-service.js";
 import { renderGameBoard } from "./board-render.js";
 import { startLiveViewServer } from "./live-view.js";
-import { CliError, createStore, listGames, loadTicket } from "./storage.js";
+import { CliError, createStore, ensureStore, listGames, loadTicket } from "./storage.js";
 import type { GameRecord, Side, TicketRecord } from "./types.js";
 
 const program = new Command();
@@ -503,6 +503,22 @@ program
   });
 
 program
+  .command("reset")
+  .description("Reset all game state (deletes all games, tickets, and live server state).")
+  .helpOption(false)
+  .action(async () => {
+    await ensureStore(store);
+    const gameFiles = await readdir(store.gamesDir);
+    const ticketFiles = await readdir(store.ticketsDir);
+    await Promise.all([
+      ...gameFiles.map((f) => rm(path.join(store.gamesDir, f), { force: true })),
+      ...ticketFiles.map((f) => rm(path.join(store.ticketsDir, f), { force: true })),
+      clearLiveServerState(),
+    ]);
+    output(`Reset complete. Deleted ${gameFiles.length} game(s) and ${ticketFiles.length} ticket(s).`, false);
+  });
+
+program
   .command("join")
   .description("Join the single active game (or create one), then block until both agents are present and it is your turn.")
   .argument("<agentId>", "Agent ID (model identity + harness, e.g. gpt-5.3@codex-app)")
@@ -761,6 +777,7 @@ async function runCli(): Promise<void> {
     "accept-draw",
     "board",
     "ui",
+    "reset",
     "help",
   ]);
   const firstToken = args[0];
