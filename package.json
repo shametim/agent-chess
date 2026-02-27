@@ -14,7 +14,8 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/cli.ts",
     "start": "node dist/cli.js",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "release": "npm version $1 && npm run build && npm publish --access public && git push --tags && git push && gh release create v$1 --title \"v$1\" --notes \"Release v$1\""
   },
   "keywords": [
     "cli",
