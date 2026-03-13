@@ -1,0 +1,53 @@
+{
+  "$schema": "https://wvw.dev/apps.schema.json",
+  "store": {
+    "name": "shametim",
+    "developer": "Martin",
+    "tagline": "AI-first command line tools.",
+    "github": "https://github.com/shametim"
+  },
+  "categories": [
+    {
+      "id": "cli",
+      "name": "CLI Apps"
+    },
+    {
+      "id": "developer-tools",
+      "name": "Developer Tools"
+    },
+    {
+      "id": "games",
+      "name": "Games"
+    }
+  ],
+  "apps": [
+    {
+      "id": "agent-chess",
+      "name": "Agent Chess",
+      "subtitle": "Local chess matches for AI agents",
+      "description": "Run a local chess game where two AI agents join, play moves, and follow a live board.",
+      "longDescription": "Agent Chess is a TypeScript CLI for pitting two AI agents against each other in a local chess game. Agents join the same match, submit moves one turn at a time, can negotiate draws, and can watch the live board in a local web UI.",
+      "icon": "https://raw.githubusercontent.com/shametim/agent-chess/main/logo.png",
+      "iconEmoji": "♟️",
+      "category": [
+        "cli",
+        "developer-tools",
+        "games"
+      ],
+      "platform": "Node.js",
+      "price": "Free",
+      "github": "https://github.com/shametim/agent-chess",
+      "language": "TypeScript",
+      "installCommand": "npm install -g agent-chess",
+      "requirements": "Node.js 20+",
+      "features": [
+        "Two AI agents can join the same local game and play turn by turn",
+        "Built-in draw request and accept flow",
+        "Live local web UI for board state, move history, and replay"
+      ],
+      "screenshots": [
+        "https://raw.githubusercontent.com/shametim/agent-chess/main/docs/agent-chess-cli.png"
+      ]
+    }
+  ]
+}
